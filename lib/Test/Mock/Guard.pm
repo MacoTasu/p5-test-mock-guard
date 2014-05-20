@@ -39,8 +39,8 @@ sub new {
 
         # Class::Name section
         load_class $class_name;
-        $stash->{$class_name} ||= {};
-        $restore->{$class_name} = {};
+        $stash->{$class_name}   ||= {};
+        $restore->{$class_name} ||= {};
 
         for my $method_name (keys %$method_defs) {
             $class->_stash($class_name, $method_name, $restore);

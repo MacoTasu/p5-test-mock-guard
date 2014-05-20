@@ -5,8 +5,9 @@ use Test::Mock::Guard qw(mock_guard);
 
 package Some::Class::One;
 
-sub new { bless {} => shift }
-sub foo { "foo" }
+sub new   { bless {} => shift }
+sub foo   { "foo" }
+sub hoge  { "hoge" }
 
 package Some::Class::Two;
 
@@ -94,6 +95,21 @@ is $obj2->bar, 'bar', 'bar';
 }
 
 is $obj->foo, 'foo', 'foo';
+is $obj2->bar, 'bar', 'bar';
+
+{
+    note 'same class dual method';
+    my $guard1 = mock_guard(
+        'Some::Class::One' => { foo => 'bar' },
+        'Some::Class::One' => { hoge => 'baz' }
+    );
+    $guard1->reset('Some::Class::One' => [qw/foo hoge/]);
+    is $obj->foo, 'foo', 'foo restored';
+    is $obj->hoge, 'hoge', 'hoge restored';
+}
+
+is $obj->foo, 'foo', 'foo';
+is $obj->hoge, 'hoge', 'hoge';
 is $obj2->bar, 'bar', 'bar';
 
 done_testing;
